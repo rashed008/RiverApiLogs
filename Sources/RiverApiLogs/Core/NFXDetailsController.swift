@@ -242,9 +242,30 @@ class NFXDetailsController: NFXGenericController {
       //  attributedString.append(header: "Request Body", value: object.requestBody)
         
         // Append request body section
+        print("Request body raw value:\n\(object.requestBody)")
+        print("Ends with }:", object.requestBody.hasSuffix("}"))
+
+        
         let bodyTitle = "[Request Body]\n" //"//Constants.bodyTitle.rawValue
-        //bodyTitle.textColor = NFXColor.NFXGray44Color()
-        let bodyContent = object.requestBody.isEmpty ? "Request body is empty\n" : object.requestBody
+        var bodyContent = object.requestBody.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if bodyContent.isEmpty {
+            bodyContent = "Request body is empty\n"
+        } else {
+            if !bodyContent.hasSuffix("}") {
+                bodyContent += "\n}"
+            } else {
+                bodyContent += "\n" // <-- Forces rendering of last line
+            }
+        }
+
+        bodyContent += "\n" // <-- Extra space to avoid clipping
+
+
+        print("Final attributed body:\n\(bodyContent)")
+
+
+        
 
         let titleAttributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: NFXColor.NFXOrangeColor(),
